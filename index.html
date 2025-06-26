@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Loja de Cartas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0001;
+      padding: 30px 24px 24px 24px;
+    }
+    h1, h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    form#form-carta {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    form#form-carta input, form#form-carta button {
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    form#form-carta button {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    form#form-carta button:hover {
+      background: #125ea8;
+    }
+    .cartas, .carrinho {
+      margin-top: 24px;
+    }
+    .cartas-lista {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .carta {
+      flex-direction: column;
+      align-items: center;
+      min-width: 140px;
+      max-width: 160px;
+      background: #fafafa;
+      box-shadow: 0 1px 4px #0001;
+      margin: 0;
+      padding: 14px 10px 10px 10px;
+      text-align: center;
+      display: flex;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      position: relative;
+    }
+    .carta img {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 1px solid #ddd;
+      background: #fff;
+    }
+    .carta strong {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .carta-preco {
+      color: #1976d2;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .carta-botoes {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      width: 100%;
+    }
+    .carrinho {
+      background: #f1f8e9;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 4px #0001;
+    }
+    .carrinho strong {
+      display: block;
+      margin: 12px 0 8px 0;
+      text-align: right;
+      font-size: 1.1rem;
+    }
+    .carrinho button {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      font-weight: bold;
+      padding: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .carrinho button:hover {
+      background: #b71c1c;
+    }
+    @media (max-width: 600px) {
+      .container {
+        max-width: 98vw;
+        padding: 10px 2vw;
+      }
+      form#form-carta {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Loja de Cartas</h1>
+    <form id="form-carta">
+      <input type="text" id="nome" placeholder="Nome da carta" required>
+      <input type="number" id="preco" placeholder="Preço" required min="0">
+      <button type="submit">Adicionar Carta</button>
+    </form>
+
+    <div class="cartas">
+      <h2>Cartas Disponíveis</h2>
+      <div id="lista-cartas" class="cartas-lista"></div>
+    </div>
+
+    <div class="carrinho">
+      <h2>Carrinho</h2>
+      <div id="lista-carrinho"></div>
+      <strong>Total: R$ <span id="total-carrinho">0.00</span></strong>
+      <button onclick="limparCarrinho()">Limpar Carrinho</button>
+    </div>
+  </div>
+  <script>
+    // Imagens e cartas permanentes
+    const cartasFixas = [
+      {
+        nome: "Wake the Dragon",
+        preco: 20,
+        imagem: "./imagens/wake-the-dragon.png"
+      },
+      {
+        nome: "Ancient Brass Dragon",
+        preco: 35,
+        imagem: "./imagens/ancient-brass-dragon.png"
+      },
+      {
+        nome: "Dragão Vermelho",
+        preco: 15,
+        imagem: "./imagens/dragao-vermelho.png"
+      },
+      {
+        nome: "O Ur-dragão",
+        preco: 40,
+        imagem: "./imagens/ur-dragao.png"
+      },
+      {
+        nome: "Tesouro do Dragão",
+        preco: 10,
+        imagem: "./imagens/tesouro-dragao.png"
+      },
+      {
+        nome: "Light and Darkness Dragon",
+        preco: 25,
+        imagem: "./imagens/light-and-darkness-dragon.png"
+      },
+      {
+        nome: "Dragão Azul",
+        preco: 18,
+        imagem: "./imagens/dragao-azul.png"
+      },
+      {
+        nome: "Dragão de Bronze Ancião",
+        preco: 22,
+        imagem: "./imagens/dragao-adicional.png"
+      }
+    ];
+
+    // Imagens disponíveis para cartas adicionadas pelo usuário
+    const imagensCartas = [
+      "./imagens/wake-the-dragon.png",
+      "./imagens/ancient-brass-dragon.png",
+      "./imagens/dragao-vermelho.png",
+      "./imagens/ur-dragao.png",
+      "./imagens/tesouro-dragao.png",
+      "./imagens/light-and-darkness-dragon.png",
+      "./imagens/dragao-azul.png",
+      "./imagens/dragao-adicional.png"
+    ];
+
+    // Funções utilitárias para Local Storage
+    function salvarCartas(cartas) {
+      localStorage.setItem('cartas', JSON.stringify(cartas));
+    }
+    function carregarCartas() {
+      return JSON.parse(localStorage.getItem('cartas')) || [];
+    }
+    function salvarCarrinho(carrinho) {
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    }
+    function carregarCarrinho() {
+      return JSON.parse(localStorage.getItem('carrinho')) || [];
+    }
+
+    // Renderizar cartas disponíveis (fixas + adicionadas)
+    function renderizarCartas() {
+      const cartasUser = carregarCartas();
+      const lista = document.getElementById('lista-cartas');
+      lista.innerHTML = '';
+
+      // Cartas fixas (não podem ser excluídas)
+      cartasFixas.forEach((carta, idx) => {
+        const div = document.createElement('div');
+        div.className = 'carta';
+        div.innerHTML = `
+          <img src="${carta.imagem}" alt="Carta" onerror="this.style.display='none'">
+          <strong>${carta.nome}</strong>
+          <span class="carta-preco">R$ ${carta.preco.toFixed(2)}</span>
+          <div class="carta-botoes">
+            <button onclick="adicionarCartaFixaAoCarrinho(${idx})">Adicionar</button>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+
+      // Cartas adicionadas pelo usuário (podem ser excluídas)
+      cartasUser.forEach((carta, idx) => {
+        const div = document.createElement('div');
+        div.className = 'carta';
+        div.innerHTML = `
+          <img src="${carta.imagem}" alt="Carta" onerror="this.style.display='none'">
+          <strong>${carta.nome}</strong>
+          <span class="carta-preco">R$ ${carta.preco.toFixed(2)}</span>
+          <div class="carta-botoes">
+            <button onclick="adicionarAoCarrinho(${idx})">Adicionar</button>
+            <button style="background:#e53935;" onclick="excluirCarta(${idx})">Excluir</button>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // Adicionar carta fixa ao carrinho
+    window.adicionarCartaFixaAoCarrinho = function(idx) {
+      const carta = cartasFixas[idx];
+      const carrinho = carregarCarrinho();
+      carrinho.push(carta);
+      salvarCarrinho(carrinho);
+      renderizarCarrinho();
+    };
+
+    // Renderizar carrinho
+    function renderizarCarrinho() {
+      const carrinho = carregarCarrinho();
+      const lista = document.getElementById('lista-carrinho');
+      lista.innerHTML = '';
+      let total = 0;
+      carrinho.forEach((item, idx) => {
+        total += item.preco;
+        const div = document.createElement('div');
+        div.className = 'carrinho-item';
+        div.innerHTML = `
+          <span>${item.nome} - R$ ${item.preco.toFixed(2)}</span>
+          <button onclick="removerDoCarrinho(${idx})">Remover</button>
+        `;
+        lista.appendChild(div);
+      });
+      document.getElementById('total-carrinho').textContent = total.toFixed(2);
+    }
+
+    // Adicionar carta do usuário ao carrinho
+    window.adicionarAoCarrinho = function(idx) {
+      const cartas = carregarCartas();
+      const carta = cartas[idx];
+      const carrinho = carregarCarrinho();
+      carrinho.push(carta);
+      salvarCarrinho(carrinho);
+      renderizarCarrinho();
+    };
+
+    // Remover do carrinho
+    window.removerDoCarrinho = function(idx) {
+      const carrinho = carregarCarrinho();
+      carrinho.splice(idx, 1);
+      salvarCarrinho(carrinho);
+      renderizarCarrinho();
+    };
+
+    // Excluir carta disponível (apenas cartas do usuário)
+    window.excluirCarta = function(idx) {
+      const cartas = carregarCartas();
+      cartas.splice(idx, 1);
+      salvarCartas(cartas);
+      renderizarCartas();
+    };
+
+    // Limpar carrinho
+    window.limparCarrinho = function() {
+      salvarCarrinho([]);
+      renderizarCarrinho();
+    };
+
+    // Adicionar carta (usuário)
+    document.getElementById('form-carta').onsubmit = function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const preco = parseFloat(document.getElementById('preco').value);
+      const imagem = imagensCartas[Math.floor(Math.random() * imagensCartas.length)];
+      const cartas = carregarCartas();
+      cartas.push({ nome, preco, imagem });
+      salvarCartas(cartas);
+      renderizarCartas();
+      this.reset();
+    };
+
+    // Inicialização
+    renderizarCartas();
+    renderizarCarrinho();
+  </script>
+</body>
+</html>
