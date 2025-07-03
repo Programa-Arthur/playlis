@@ -266,6 +266,8 @@
     }
 
     // Adicionar carta fixa ao carrinho
+    // Este ouvinte é chamado ao clicar no botão "Adicionar" de uma carta fixa.
+    // Ele adiciona a carta fixa selecionada ao carrinho e atualiza a visualização do carrinho.
     window.adicionarCartaFixaAoCarrinho = function(idx) {
       const carta = cartasFixas[idx];
       const carrinho = carregarCarrinho();
@@ -294,6 +296,8 @@
     }
 
     // Adicionar carta do usuário ao carrinho
+    // Este ouvinte é chamado ao clicar no botão "Adicionar" de uma carta criada pelo usuário.
+    // Ele adiciona a carta do usuário ao carrinho e atualiza a visualização do carrinho.
     window.adicionarAoCarrinho = function(idx) {
       const cartas = carregarCartas();
       const carta = cartas[idx];
@@ -304,6 +308,8 @@
     };
 
     // Remover do carrinho
+    // Este ouvinte é chamado ao clicar no botão "Remover" de um item do carrinho.
+    // Ele remove o item selecionado do carrinho e atualiza a visualização do carrinho.
     window.removerDoCarrinho = function(idx) {
       const carrinho = carregarCarrinho();
       carrinho.splice(idx, 1);
@@ -312,6 +318,8 @@
     };
 
     // Excluir carta disponível (apenas cartas do usuário)
+    // Este ouvinte é chamado ao clicar no botão "Excluir" de uma carta criada pelo usuário.
+    // Ele remove a carta da lista de cartas disponíveis e atualiza a visualização das cartas.
     window.excluirCarta = function(idx) {
       const cartas = carregarCartas();
       cartas.splice(idx, 1);
@@ -320,12 +328,16 @@
     };
 
     // Limpar carrinho
+    // Este ouvinte é chamado ao clicar no botão "Limpar Carrinho".
+    // Ele esvazia o carrinho e atualiza a visualização do carrinho.
     window.limparCarrinho = function() {
       salvarCarrinho([]);
       renderizarCarrinho();
     };
 
     // Adicionar carta (usuário)
+    // Este ouvinte é chamado ao submeter o formulário de adicionar carta.
+    // Ele cria uma nova carta com os dados do formulário, salva e atualiza a lista de cartas.
     document.getElementById('form-carta').onsubmit = function(e) {
       e.preventDefault();
       const nome = document.getElementById('nome').value;
