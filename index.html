@@ -2,12 +2,13 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Loja de Cartas</title>
+  <title>Lista de Compras</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #f4f4f4;
+      transition: background 0.3s, color 0.3s;
     }
     .container {
       max-width: 500px;
@@ -21,346 +22,341 @@
       text-align: center;
       margin-top: 0;
     }
-    form#form-carta {
+    form#form-item {
       display: flex;
       gap: 10px;
       justify-content: center;
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    form#form-carta input, form#form-carta button {
+    form#form-item input, form#form-item button {
       padding: 8px;
       font-size: 1rem;
       border-radius: 4px;
       border: 1px solid #ccc;
     }
-    form#form-carta button {
+    form#form-item button {
       background: #1976d2;
       color: #fff;
       border: none;
       cursor: pointer;
       transition: background 0.2s;
     }
-    form#form-carta button:hover {
+    form#form-item button:hover {
       background: #125ea8;
     }
-    .cartas, .carrinho {
+    .lista-compras {
       margin-top: 24px;
+      background: #f1f8e9;
+      border-radius: 12px;
+      padding: 24px 18px 18px 18px;
+      box-shadow: 0 2px 12px #0002;
+      border: 1.5px solid #b2dfdb;
+      transition: box-shadow 0.2s;
     }
-    .cartas-lista {
+    .lista-compras:hover {
+      box-shadow: 0 4px 24px #0003;
+    }
+    .item-lista {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-    }
-    .carta {
-      flex-direction: column;
       align-items: center;
-      min-width: 140px;
-      max-width: 160px;
-      background: #fafafa;
-      box-shadow: 0 1px 4px #0001;
-      margin: 0;
-      padding: 14px 10px 10px 10px;
-      text-align: center;
-      display: flex;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      position: relative;
-    }
-    .carta img {
-      width: 80px;
-      height: 80px;
-      border-radius: 6px;
-      object-fit: cover;
-      margin-bottom: 8px;
-      border: 1px solid #ddd;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #c8e6c9;
       background: #fff;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 4px #0001;
+      transition: background 0.2s;
     }
-    .carta strong {
-      font-size: 1.05rem;
-      margin-bottom: 4px;
-      display: block;
+    .item-lista:last-child {
+      border-bottom: none;
     }
-    .carta-preco {
+    .item-nome {
+      flex: 1;
+      font-size: 1.08rem;
+      font-weight: 500;
+      color: #388e3c;
+      text-align: left;
+      padding-left: 8px;
+    }
+    .item-qtd {
+      margin: 0 12px;
       color: #1976d2;
       font-weight: bold;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .carta-botoes {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      width: 100%;
-    }
-    .carrinho {
-      background: #f1f8e9;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 1px 4px #0001;
-    }
-    .carrinho strong {
-      display: block;
-      margin: 12px 0 8px 0;
+      font-size: 1.05rem;
+      min-width: 70px;
       text-align: right;
-      font-size: 1.1rem;
     }
-    .carrinho button {
-      background: #e53935;
+    .item-botoes button {
+      background: linear-gradient(90deg, #e53935 60%, #ff7043 100%);
       color: #fff;
       border: none;
       border-radius: 4px;
-      margin: 0 auto;
+      padding: 5px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 6px;
+      font-weight: 500;
+      box-shadow: 0 1px 4px #0002;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .item-botoes button:hover {
+      background: linear-gradient(90deg, #b71c1c 60%, #ff7043 100%);
+      box-shadow: 0 2px 8px #0002;
+    }
+    .total-lista {
+      display: block;
+      margin: 18px 0 0 0;
+      text-align: right;
+      font-size: 1.13rem;
+      font-weight: bold;
+      color: #388e3c;
+      letter-spacing: 0.5px;
+      background: #e8f5e9;
+      border-radius: 6px;
+      padding: 8px 0 6px 0;
+    }
+    .limpar-btn {
+      background: linear-gradient(90deg, #1976d2 60%, #64b5f6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      margin: 18px 0 0 0;
       display: block;
       width: 100%;
       font-weight: bold;
-      padding: 8px;
-      font-size: 1rem;
+      padding: 10px;
+      font-size: 1.08rem;
       cursor: pointer;
-      transition: background 0.2s;
+      box-shadow: 0 1px 4px #0001;
+      transition: background 0.2s, box-shadow 0.2s;
     }
-    .carrinho button:hover {
-      background: #b71c1c;
+    .limpar-btn:hover {
+      background: linear-gradient(90deg, #125ea8 60%, #64b5f6 100%);
+      box-shadow: 0 2px 8px #0002;
+    }
+    /* Modo escuro */
+    body.dark-mode {
+      background: #181c1f;
+      color: #e0e0e0;
+    }
+    body.dark-mode .container {
+      background: #23272b;
+      box-shadow: 0 2px 12px #0006;
+      border-color: #263238;
+    }
+    body.dark-mode .lista-compras {
+      background: #23272b;
+      border-color: #37474f;
+      box-shadow: 0 2px 16px #000a;
+    }
+    body.dark-mode .item-lista {
+      background: #263238;
+      border-bottom: 1px solid #37474f;
+      color: #e0e0e0;
+    }
+    body.dark-mode .item-nome {
+      color: #90caf9;
+    }
+    body.dark-mode .item-qtd {
+      color: #80cbc4;
+    }
+    body.dark-mode .total-lista {
+      background: #263238;
+      color: #aed581;
+    }
+    body.dark-mode .limpar-btn {
+      background: linear-gradient(90deg, #263238 60%, #607d8b 100%);
+      color: #fff;
+    }
+    body.dark-mode .limpar-btn:hover {
+      background: linear-gradient(90deg, #37474f 60%, #607d8b 100%);
+    }
+    body.dark-mode form#form-item input,
+    body.dark-mode form#form-item button {
+      background: #23272b;
+      color: #e0e0e0;
+      border: 1px solid #37474f;
+    }
+    body.dark-mode form#form-item button {
+      background: #607d8b;
+      color: #fff;
+    }
+    body.dark-mode form#form-item button:hover {
+      background: #455a64;
+    }
+    body.dark-mode .item-botoes button {
+      background: linear-gradient(90deg, #b71c1c 60%, #ff7043 100%);
+      color: #fff;
+    }
+    body.dark-mode .item-botoes button:hover {
+      background: linear-gradient(90deg, #e53935 60%, #ff7043 100%);
     }
     @media (max-width: 600px) {
       .container {
         max-width: 98vw;
         padding: 10px 2vw;
       }
-      form#form-carta {
+      form#form-item {
         flex-direction: column;
         gap: 8px;
       }
+    }
+    .modo-btn {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      background: #fff;
+      color: #1976d2;
+      border: 1px solid #1976d2;
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      z-index: 10;
+    }
+    .modo-btn:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+    body.dark-mode .modo-btn {
+      background: #23272b;
+      color: #90caf9;
+      border: 1px solid #90caf9;
+    }
+    body.dark-mode .modo-btn:hover {
+      background: #90caf9;
+      color: #23272b;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Loja de Cartas</h1>
-    <form id="form-carta">
-      <input type="text" id="nome" placeholder="Nome da carta" required>
-      <input type="number" id="preco" placeholder="Preço" required min="0">
-      <button type="submit">Adicionar Carta</button>
+    <button class="modo-btn" id="toggle-modo" type="button">Modo Escuro</button>
+    <h1>Lista de Compras</h1>
+    <form id="form-item">
+      <input type="text" id="nome-item" placeholder="Nome do item" required>
+      <input type="number" id="quantidade-item" placeholder="Quantidade" required min="1" value="1">
+      <input type="number" id="preco-item" placeholder="Preço (opcional)" min="0" step="0.01">
+      <button type="submit">Adicionar Item</button>
     </form>
 
-    <div class="cartas">
-      <h2>Cartas Disponíveis</h2>
-      <div id="lista-cartas" class="cartas-lista"></div>
-    </div>
-
-    <div class="carrinho">
-      <h2>Carrinho</h2>
-      <div id="lista-carrinho"></div>
-      <strong>Total: R$ <span id="total-carrinho">0.00</span></strong>
-      <button onclick="limparCarrinho()">Limpar Carrinho</button>
+    <div class="lista-compras">
+      <h2>Itens</h2>
+      <div id="itens-lista"></div>
+      <span class="total-lista">
+        Total de itens: <span id="total-itens">0</span>
+        <br>
+        Total em R$: <span id="total-preco">0.00</span>
+      </span>
+      <button class="limpar-btn" onclick="limparLista()">Limpar Lista</button>
     </div>
   </div>
   <script>
-    // Imagens e cartas permanentes
-    const cartasFixas = [
-      {
-        nome: "Wake the Dragon",
-        preco: 20,
-        imagem: "./imagens/wake-the-dragon.png"
-      },
-      {
-        nome: "Ancient Brass Dragon",
-        preco: 35,
-        imagem: "./imagens/ancient-brass-dragon.png"
-      },
-      {
-        nome: "Dragão Vermelho",
-        preco: 15,
-        imagem: "./imagens/dragao-vermelho.png"
-      },
-      {
-        nome: "O Ur-dragão",
-        preco: 40,
-        imagem: "./imagens/ur-dragao.png"
-      },
-      {
-        nome: "Tesouro do Dragão",
-        preco: 10,
-        imagem: "./imagens/tesouro-dragao.png"
-      },
-      {
-        nome: "Light and Darkness Dragon",
-        preco: 25,
-        imagem: "./imagens/light-and-darkness-dragon.png"
-      },
-      {
-        nome: "Dragão Azul",
-        preco: 18,
-        imagem: "./imagens/dragao-azul.png"
-      },
-      {
-        nome: "Dragão de Bronze Ancião",
-        preco: 22,
-        imagem: "./imagens/dragao-adicional.png"
-      }
-    ];
-
-    // Imagens disponíveis para cartas adicionadas pelo usuário
-    const imagensCartas = [
-      "./imagens/wake-the-dragon.png",
-      "./imagens/ancient-brass-dragon.png",
-      "./imagens/dragao-vermelho.png",
-      "./imagens/ur-dragao.png",
-      "./imagens/tesouro-dragao.png",
-      "./imagens/light-and-darkness-dragon.png",
-      "./imagens/dragao-azul.png",
-      "./imagens/dragao-adicional.png"
-    ];
-
-    // Funções utilitárias para Local Storage
-
-    // Salva a lista de cartas do usuário no localStorage (chave 'cartas')
-    function salvarCartas(cartas) {
-      localStorage.setItem('cartas', JSON.stringify(cartas));
+    // Utilitários Local Storage
+    function salvarLista(lista) {
+      localStorage.setItem('listaCompras', JSON.stringify(lista));
+    }
+    function carregarLista() {
+      return JSON.parse(localStorage.getItem('listaCompras')) || [];
     }
 
-    // Carrega a lista de cartas do usuário do localStorage (chave 'cartas')
-    function carregarCartas() {
-      return JSON.parse(localStorage.getItem('cartas')) || [];
-    }
-
-    // Salva o carrinho no localStorage (chave 'carrinho')
-    function salvarCarrinho(carrinho) {
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    }
-
-    // Carrega o carrinho do localStorage (chave 'carrinho')
-    function carregarCarrinho() {
-      return JSON.parse(localStorage.getItem('carrinho')) || [];
-    }
-
-    // Renderizar cartas disponíveis (fixas + adicionadas)
-    function renderizarCartas() {
-      const cartasUser = carregarCartas();
-      const lista = document.getElementById('lista-cartas');
-      lista.innerHTML = '';
-
-      // Cartas fixas (não podem ser excluídas)
-      cartasFixas.forEach((carta, idx) => {
-        const div = document.createElement('div');
-        div.className = 'carta';
-        div.innerHTML = `
-          <img src="${carta.imagem}" alt="Carta" onerror="this.style.display='none'">
-          <strong>${carta.nome}</strong>
-          <span class="carta-preco">R$ ${carta.preco.toFixed(2)}</span>
-          <div class="carta-botoes">
-            <button onclick="adicionarCartaFixaAoCarrinho(${idx})">Adicionar</button>
-          </div>
-        `;
-        lista.appendChild(div);
-      });
-
-      // Cartas adicionadas pelo usuário (podem ser excluídas)
-      cartasUser.forEach((carta, idx) => {
-        const div = document.createElement('div');
-        div.className = 'carta';
-        div.innerHTML = `
-          <img src="${carta.imagem}" alt="Carta" onerror="this.style.display='none'">
-          <strong>${carta.nome}</strong>
-          <span class="carta-preco">R$ ${carta.preco.toFixed(2)}</span>
-          <div class="carta-botoes">
-            <button onclick="adicionarAoCarrinho(${idx})">Adicionar</button>
-            <button style="background:#e53935;" onclick="excluirCarta(${idx})">Excluir</button>
-          </div>
-        `;
-        lista.appendChild(div);
-      });
-    }
-
-    // Adicionar carta fixa ao carrinho
-    // Este ouvinte é chamado ao clicar no botão "Adicionar" de uma carta fixa.
-    // Ele adiciona a carta fixa selecionada ao carrinho e atualiza a visualização do carrinho.
-    window.adicionarCartaFixaAoCarrinho = function(idx) {
-      const carta = cartasFixas[idx];
-      const carrinho = carregarCarrinho();
-      carrinho.push(carta);
-      salvarCarrinho(carrinho);
-      renderizarCarrinho();
-    };
-
-    // Renderizar carrinho
-    function renderizarCarrinho() {
-      const carrinho = carregarCarrinho();
-      const lista = document.getElementById('lista-carrinho');
-      lista.innerHTML = '';
+    // Renderiza a lista de compras
+    function renderizarLista() {
+      const lista = carregarLista();
+      const divLista = document.getElementById('itens-lista');
+      divLista.innerHTML = '';
       let total = 0;
-      carrinho.forEach((item, idx) => {
-        total += item.preco;
+      let totalPreco = 0;
+      lista.forEach((item, idx) => {
+        total += item.quantidade;
+        if (item.preco && !isNaN(item.preco)) {
+          totalPreco += item.preco * item.quantidade;
+        }
         const div = document.createElement('div');
-        div.className = 'carrinho-item';
+        div.className = 'item-lista';
         div.innerHTML = `
-          <span>${item.nome} - R$ ${item.preco.toFixed(2)}</span>
-          <button onclick="removerDoCarrinho(${idx})">Remover</button>
+          <span class="item-nome">${item.nome}</span>
+          <span class="item-qtd">x${item.quantidade}</span>
+          <span class="item-qtd">${item.preco !== undefined && item.preco !== "" && !isNaN(item.preco) ? "R$ " + Number(item.preco).toFixed(2) : ""}</span>
+          <span class="item-botoes">
+            <button onclick="removerItem(${idx})">Remover</button>
+          </span>
         `;
-        lista.appendChild(div);
+        divLista.appendChild(div);
       });
-      document.getElementById('total-carrinho').textContent = total.toFixed(2);
+      document.getElementById('total-itens').textContent = total;
+      document.getElementById('total-preco').textContent = totalPreco.toFixed(2);
     }
 
-    // Adicionar carta do usuário ao carrinho
-    // Este ouvinte é chamado ao clicar no botão "Adicionar" de uma carta criada pelo usuário.
-    // Ele adiciona a carta do usuário ao carrinho e atualiza a visualização do carrinho.
-    window.adicionarAoCarrinho = function(idx) {
-      const cartas = carregarCartas();
-      const carta = cartas[idx];
-      const carrinho = carregarCarrinho();
-      carrinho.push(carta);
-      salvarCarrinho(carrinho);
-      renderizarCarrinho();
-    };
-
-    // Remover do carrinho
-    // Este ouvinte é chamado ao clicar no botão "Remover" de um item do carrinho.
-    // Ele remove o item selecionado do carrinho e atualiza a visualização do carrinho.
-    window.removerDoCarrinho = function(idx) {
-      const carrinho = carregarCarrinho();
-      carrinho.splice(idx, 1);
-      salvarCarrinho(carrinho);
-      renderizarCarrinho();
-    };
-
-    // Excluir carta disponível (apenas cartas do usuário)
-    // Este ouvinte é chamado ao clicar no botão "Excluir" de uma carta criada pelo usuário.
-    // Ele remove a carta da lista de cartas disponíveis e atualiza a visualização das cartas.
-    window.excluirCarta = function(idx) {
-      const cartas = carregarCartas();
-      cartas.splice(idx, 1);
-      salvarCartas(cartas);
-      renderizarCartas();
-    };
-
-    // Limpar carrinho
-    // Este ouvinte é chamado ao clicar no botão "Limpar Carrinho".
-    // Ele esvazia o carrinho e atualiza a visualização do carrinho.
-    window.limparCarrinho = function() {
-      salvarCarrinho([]);
-      renderizarCarrinho();
-    };
-
-    // Adicionar carta (usuário)
-    // Este ouvinte é chamado ao submeter o formulário de adicionar carta.
-    // Ele cria uma nova carta com os dados do formulário, salva e atualiza a lista de cartas.
-    document.getElementById('form-carta').onsubmit = function(e) {
+    // Adiciona item à lista
+    document.getElementById('form-item').onsubmit = function(e) {
       e.preventDefault();
-      const nome = document.getElementById('nome').value;
-      const preco = parseFloat(document.getElementById('preco').value);
-      const imagem = imagensCartas[Math.floor(Math.random() * imagensCartas.length)];
-      const cartas = carregarCartas();
-      cartas.push({ nome, preco, imagem });
-      salvarCartas(cartas);
-      renderizarCartas();
+      const nome = document.getElementById('nome-item').value.trim();
+      const quantidade = parseInt(document.getElementById('quantidade-item').value, 10);
+      const precoStr = document.getElementById('preco-item').value;
+      const preco = precoStr !== "" ? parseFloat(precoStr) : undefined;
+      if (!nome || quantidade < 1) return;
+      const lista = carregarLista();
+      // Se já existe, soma a quantidade e atualiza preço se informado
+      const idxExistente = lista.findIndex(i => i.nome.toLowerCase() === nome.toLowerCase());
+      if (idxExistente !== -1) {
+        lista[idxExistente].quantidade += quantidade;
+        if (preco !== undefined && !isNaN(preco)) {
+          lista[idxExistente].preco = preco;
+        }
+      } else {
+        const novoItem = { nome, quantidade };
+        if (preco !== undefined && !isNaN(preco)) {
+          novoItem.preco = preco;
+        }
+        lista.push(novoItem);
+      }
+      salvarLista(lista);
+      renderizarLista();
       this.reset();
     };
 
+    // Remove item da lista
+    window.removerItem = function(idx) {
+      const lista = carregarLista();
+      lista.splice(idx, 1);
+      salvarLista(lista);
+      renderizarLista();
+    };
+
+    // Limpa toda a lista
+    window.limparLista = function() {
+      salvarLista([]);
+      renderizarLista();
+    };
+
+    // Modo escuro/claro
+    const btnModo = document.getElementById('toggle-modo');
+    btnModo.onclick = function() {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        btnModo.textContent = 'Modo Claro';
+        localStorage.setItem('modo', 'dark');
+      } else {
+        btnModo.textContent = 'Modo Escuro';
+        localStorage.setItem('modo', 'light');
+      }
+    };
+    // Mantém preferência ao recarregar
+    (function () {
+      const modo = localStorage.getItem('modo');
+      if (modo === 'dark') {
+        document.body.classList.add('dark-mode');
+        btnModo.textContent = 'Modo Claro';
+      }
+    })();
+
     // Inicialização
-    renderizarCartas();
-    renderizarCarrinho();
+    renderizarLista();
   </script>
 </body>
 </html>
